@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Nexify Homework</title>
+    <style>
+        .calendar {
+            display:inline-block;
+        }
+        
+        .glyphicon-calendar {
+            font-size: 15pt;
+        }
+
+        .input-group {
+            width: 180px;
+            position:relative;
+        }
+
+        .calendar-input{
+            display:block;
+            width:1%;
+            flex-grow:1;
+            flex-shrink:1;
+            flex-basis:1;
+        }
+
+        .calendar-icon-btn{
+            position:absolute;
+            right:5%;
+            top:10%;
+        }
+
+        .main-container {
+            width: 60%;
+            margin: 0 auto;
+            position:relative;
+            top:50px;
+        }
+
+        .average-display {
+            justify-content: space-between;
+            display: flex;
+        }
+
+    </style>
+</head>
+<body>
+    
+
+    <div class="main-container">
+        <div class="average-display">
+            <button id="addBtn" type="button" class="btn btn-primary" onclick="addRow()">Add</button>
+            <button id="putBtn" type="button" class="btn btn-success" onclick="PutData()">Save</button>
+            <button id="loadBtn" type="button" class="btn btn-danger" onclick="LoadData()">Update</button>
+        </div>
+        <table id="table_id" class="table">
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" 
+            integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
+    <script>
+        var uri = 'https://localhost:44304/api/Employee';
+        var updatedIds = [];
+        var dataset = [];
+
+        $(document).ready(function () {
+            var tableOptions = {
+                language: {
+                    "zeroRecords": " "
+                },
+                "ajax": function (data, callback, settings) {
+                    callback({ data: dataset })
+                },
+                "ordering": false,
+                "searching": false,
+                "paging": false,
+                "info": false, 
+                "columnDefs": [
+                    {
+                        "data": "Name",
+                        "dataType":"string",
+                        "title": "Name",
+                        "targets": 0,
+                        "render": function (data, type, row, meta) {
+                            return `<input value="${data}">`
+                        }
+                    },
+                    {
+                        "data": "DateOfBirth",
+                        "dataType": "dateTime",
+                        "title": "DateOfBirth",
+                        "targets": 1,
+                        "render": function (data, type, row, meta) {
+                            return `<div class="input-group"><input type="text" class="calendar-input datepicker" value=${data}>
+                                        <label class="add-on calendar-icon-btn">
+                                            <i class="fa fa-calendar" id="cal2"></i>
+                                        </label>
+                                    </div>`;
+                        }
+                    },
+                    {
+                        "data": "Salary",
+                        "dataType": "number",
+                        "title": "Salary",
+                        "targets": 2,
+                        "render": function (data, type, row, meta) {
+                            return `<input type="range" min="0" max="100000" value=${data}>`;
+                        }
+                    },
+                    {
+                        "data": "Address",
+                        "dataType": "string",
+                        "title": "Address",
+                        "targets": 3,
+                        "render": function (data, type, row, meta) {
+                            return `<input value="${data}">`;
+                        }
+                    }
+                ]
+            };
+            var dataTable = $('#table_id').DataTable(tableOptions);
+            SetDatePicker();
+
+            // non-datetime-field change
+            $('#table_id').on('change', 'input', function () {
+                var td = $(this).closest('td');
+                var cell = dataTable.cell(td);
+                var rowIndex = cell.index().row;
+                var columnIndex = cell.index().column;
+                var columnDef = tableOptions.columnDefs.filter(x => x.targets == columnIndex);
+                var dataAttr = columnDef[0].data;
+                var columnType = columnDef[0].dataType;
+                var inputVal = $(dataTable.cell(rowIndex, columnIndex).node()).find('input').val();
+                if (columnType == 'number') {
+                    inputVal = parseInt(inputVal);
+                }
+                dataset[rowIndex][dataAttr] = inputVal;
+            });
+        });
+
+        function addRow() {
+            dataset.unshift({
+                "id": null,
+                "Name": "",
+                "DateOfBirth": "",
+                "Salary": 0,
+                "Address": ""
+            });
+            var dataTable = $('#table_id').DataTable();
+            dataTable.ajax.reload();
+            SetDatePicker();
+        }
+
+        function PutData() {
+            DisabledBtns();
+            dataset.forEach(x => x.DateOfBirth = new Date(x.DateOfBirth));
+            $.ajax({
+                method: "PUT",
+                url: "https://localhost:44304/api/Employee",
+                contentType: 'application/json',
+                data: JSON.stringify(dataset)
+            })
+            .done(function () {
+                LoadData();
+            }).fail(function () {
+                EnabledBtns();
+            });
+        }
+
+        function LoadData() {
+            DisabledBtns();
+            $.ajax({
+                method: "GET",
+                url: "https://localhost:44304/api/Employee",
+                cache: false
+            })
+            .done(function (res) {
+                dataset = res.data;
+                $('#table_id').DataTable().ajax.reload();
+                SetDatePicker();
+                EnabledBtns();
+            }).fail(function () {
+                EnabledBtns();
+            });
+        }
+
+        function SetDatePicker() {
+            $('.datepicker').off('focus')
+                .datepicker({
+                    format: 'yyyy/mm/dd',
+                    autoclose: true,
+                    showOnFocus: true
+                });
+        }
+
+        function DisabledBtns() {
+            $('#addBtn').attr("disabled", true);
+            $('#putBtn').attr("disabled", true);
+            $('#loadBtn').attr("disabled", true);
+        }
+
+        function EnabledBtns() {
+            $('#addBtn').removeAttr("disabled");
+            $('#putBtn').removeAttr("disabled");
+            $('#loadBtn').removeAttr("disabled");
+        }
+
+    </script>
+</body>
+</html>

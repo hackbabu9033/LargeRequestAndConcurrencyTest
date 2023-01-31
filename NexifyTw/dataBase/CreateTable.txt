@@ -1,0 +1,10 @@
+Create Table Employee(
+   ID INTEGER PRIMARY KEY   AUTOINCREMENT,
+   DateOfBirth    Text,
+   Name           Text,
+   AGE            INT,
+   ADDRESS        Text,
+   SALARY         REAL
+)
+
+UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Employee';
