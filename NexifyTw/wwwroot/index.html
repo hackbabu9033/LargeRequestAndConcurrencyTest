@@ -68,10 +68,11 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
     <script>
-        var uri = 'https://localhost:44304/api/Employee';
+        var apiEndPoint = GetHostEndPoint() + '/api/Employee';
         var updatedIds = [];
         var dataset = [];
-
+        
+        console.log(GetHostEndPoint());
         $(document).ready(function () {
             var tableOptions = {
                 language: {
@@ -165,7 +166,7 @@
             dataset.forEach(x => x.DateOfBirth = new Date(x.DateOfBirth));
             $.ajax({
                 method: "PUT",
-                url: "https://localhost:44304/api/Employee",
+                url: apiEndPoint,
                 contentType: 'application/json',
                 data: JSON.stringify(dataset)
             })
@@ -180,7 +181,7 @@
             DisabledBtns();
             $.ajax({
                 method: "GET",
-                url: "https://localhost:44304/api/Employee",
+                url: apiEndPoint,
                 cache: false
             })
             .done(function (res) {
@@ -212,6 +213,19 @@
             $('#addBtn').removeAttr("disabled");
             $('#putBtn').removeAttr("disabled");
             $('#loadBtn').removeAttr("disabled");
+        }
+
+        function GetHostEndPoint() {
+            let sp = window.location.href.split("/");
+            console.log(sp);
+            let index = sp[2].indexOf(":");
+
+            let serverUrl = sp[0] + "//" + sp[2];
+
+            serverUrl += "/" + sp[3];
+
+            console.log('serverUrl:' + serverUrl);
+            return serverUrl;
         }
 
     </script>
