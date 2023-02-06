@@ -14,10 +14,15 @@ namespace NexifyTw.Repo
     {
         private string _conn = "";
         private IConfiguration _config;
+        private List<string> _status;
+        private static Random _rnd = new Random();
+        private int count { get { return _status.Count; } }
+
         public EmployeeRepo(IConfiguration config)
         {
             _config = config;
             _conn = _config.GetConnectionString("Nexify");
+            _status = new List<string>() { "hot","cold","aaa","bbb","ccc","ddd" };
         }
         public List<EmployeeDTO> GetAll()
         {
@@ -60,6 +65,12 @@ VALUES (@Name,@DateOfBirth,@Salary,@Address)";
                 }
                 conn.Close();
             }
+        }
+
+        public string GetRandomeStatus()
+        {
+            var rndIndex = _rnd.Next(0, count);
+            return _status[rndIndex];
         }
     }
 }

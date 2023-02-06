@@ -39,5 +39,12 @@ namespace NexifyTw
             _employeeRepo.PutEmployees(putEmployees);
             return Ok();
         }
+
+        [HttpGet("status")]
+        public IActionResult GetStatusByRandome()
+        {
+            var status = _employeeRepo.GetRandomeStatus();
+            return Ok(status);
+        }
     }
 }

@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost:1000/NexifyTw",
+      "applicationUrl": "http://localhost/NexifyTw",
       "sslPort": 0
     },
     "iisExpress": {
