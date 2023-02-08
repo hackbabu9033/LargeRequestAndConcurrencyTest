@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace NexifyTw.Repo
 {
@@ -16,6 +18,9 @@ namespace NexifyTw.Repo
         private IConfiguration _config;
         private List<string> _status;
         private static Random _rnd = new Random();
+        private static int test = 0;
+        private static ConcurrentBag<int> _allThreadIds = new ConcurrentBag<int>();
+        private static ConcurrentBag<int> requestLogCounts = new ConcurrentBag<int>();
         private int count { get { return _status.Count; } }
 
         public EmployeeRepo(IConfiguration config)
@@ -26,6 +31,11 @@ namespace NexifyTw.Repo
         }
         public List<EmployeeDTO> GetAll()
         {
+            System.Diagnostics.Debug.WriteLine("get all used thread Ids");
+            foreach (var threadId in _allThreadIds)
+            {
+                System.Diagnostics.Debug.WriteLine(threadId);
+            }
             using (var conn = new SQLiteConnection(_conn))
             {
                 var sql = "select * from Employee order by Id DESC";
@@ -69,6 +79,16 @@ VALUES (@Name,@DateOfBirth,@Salary,@Address)";
 
         public string GetRandomeStatus()
         {
+            // display get get request time and thread id which process this request
+            var curThreadId = Environment.CurrentManagedThreadId;
+            requestLogCounts.Add(1);
+            if (!_allThreadIds.Contains(curThreadId))
+            {
+                _allThreadIds.Add(curThreadId);
+            }
+            //// mock some operation consume large amount of time
+            //Thread.Sleep(300);
+            System.Diagnostics.Debug.WriteLine(test++);
             var rndIndex = _rnd.Next(0, count);
             return _status[rndIndex];
         }

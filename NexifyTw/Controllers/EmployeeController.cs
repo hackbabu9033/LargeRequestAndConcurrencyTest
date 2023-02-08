@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NexifyTw.Model;
 using NexifyTw.Repo;
 using System;
@@ -10,6 +11,7 @@ namespace NexifyTw
 {
     [ApiController]
     [Route("api/Employee")]
+    [AllowAnonymous]
     public class EmployeeController : ControllerBase
     {
         private EmployeeRepo _employeeRepo { get; set; }

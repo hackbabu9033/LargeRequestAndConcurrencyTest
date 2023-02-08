@@ -222,8 +222,9 @@
             let index = sp[2].indexOf(":");
 
             let serverUrl = sp[0] + "//" + sp[2];
-
-            serverUrl += "/" + sp[3];
+            if (sp.length >= 4 && sp[3] && !sp[3].includes(".html")) {
+                serverUrl += "/" + sp[3];
+            }
 
             console.log('serverUrl:' + serverUrl);
             return serverUrl;
