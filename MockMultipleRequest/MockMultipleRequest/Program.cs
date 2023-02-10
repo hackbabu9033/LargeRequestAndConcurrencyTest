@@ -44,6 +44,9 @@ namespace MockMultipleRequest
             #endregion
 
             #region test use hashSet data performance diff
+            // 說明：如果針對單一collection的「多次查詢」，要先建立好hashset後再查詢可以大幅度的提升效能
+            // 因為hashset的查詢是O(1)
+            // hash的原理可以參考這裡https://ithelp.ithome.com.tw/articles/10208884
             var testData = new int[10000000];
             var rnd = new Random();
             var rndSearchIndex = rnd.Next(0, 10000000);
