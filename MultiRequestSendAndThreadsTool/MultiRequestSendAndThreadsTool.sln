@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendManyRequest", "SendManyRequest\SendManyRequest.csproj", "{C22B3AE4-9408-4F71-97A5-2C238FF55DD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRequestSendAndThreadsTool", "MultiRequestSendAndThreadsTool\MultiRequestSendAndThreadsTool.csproj", "{3DB08011-FBB8-411B-BAF4-F6A6520D820C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C22B3AE4-9408-4F71-97A5-2C238FF55DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C22B3AE4-9408-4F71-97A5-2C238FF55DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C22B3AE4-9408-4F71-97A5-2C238FF55DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C22B3AE4-9408-4F71-97A5-2C238FF55DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DB08011-FBB8-411B-BAF4-F6A6520D820C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DB08011-FBB8-411B-BAF4-F6A6520D820C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DB08011-FBB8-411B-BAF4-F6A6520D820C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DB08011-FBB8-411B-BAF4-F6A6520D820C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {391A57BD-F748-42BF-9587-9C3B6CF22A7A}
+		SolutionGuid = {D2BED99D-9492-42FD-A99D-3B797213C7B9}
 	EndGlobalSection
 EndGlobal

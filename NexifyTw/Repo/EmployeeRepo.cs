@@ -82,13 +82,16 @@ VALUES (@Name,@DateOfBirth,@Salary,@Address)";
             // display get get request time and thread id which process this request
             var curThreadId = Environment.CurrentManagedThreadId;
             requestLogCounts.Add(1);
+            Monitor.Enter(test);
+            test++;
+            Monitor.Exit(test);
             if (!_allThreadIds.Contains(curThreadId))
             {
                 _allThreadIds.Add(curThreadId);
             }
             //// mock some operation consume large amount of time
             //Thread.Sleep(300);
-            System.Diagnostics.Debug.WriteLine(test++);
+            System.Diagnostics.Debug.WriteLine(test);
             var rndIndex = _rnd.Next(0, count);
             return _status[rndIndex];
         }
