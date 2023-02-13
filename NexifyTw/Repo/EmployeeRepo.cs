@@ -21,6 +21,7 @@ namespace NexifyTw.Repo
         private static int test = 0;
         private static ConcurrentBag<int> _allThreadIds = new ConcurrentBag<int>();
         private static ConcurrentBag<int> requestLogCounts = new ConcurrentBag<int>();
+        private static object _objLock = new object();
         private int count { get { return _status.Count; } }
 
         public EmployeeRepo(IConfiguration config)
@@ -79,21 +80,31 @@ VALUES (@Name,@DateOfBirth,@Salary,@Address)";
 
         public string GetRandomeStatus()
         {
-            // display get get request time and thread id which process this request
-            var curThreadId = Environment.CurrentManagedThreadId;
-            requestLogCounts.Add(1);
-            Monitor.Enter(test);
-            test++;
-            Monitor.Exit(test);
-            if (!_allThreadIds.Contains(curThreadId))
-            {
-                _allThreadIds.Add(curThreadId);
-            }
+            //// display get get request time and thread id which process this request
+            //// 這裡可以看到即使有非常大量的reqeust情況下，仍然只有很少數的work thread
+            //var curThreadId = Environment.CurrentManagedThreadId;
+            //if (!_allThreadIds.Contains(curThreadId))
+            //{
+            //    _allThreadIds.Add(curThreadId);
+            //}
+
+
+            //// 如果此站台的佇列長度與最大併發連線數沒有很大時，如有大量request，就會發生503的問題
             //// mock some operation consume large amount of time
             //Thread.Sleep(300);
+
+            AddTest();
             System.Diagnostics.Debug.WriteLine(test);
             var rndIndex = _rnd.Next(0, count);
             return _status[rndIndex];
+        }
+
+        private async void AddTest()
+        {
+            Monitor.Enter(_objLock);
+            test++;
+            Monitor.Exit(_objLock);
+            System.Diagnostics.Debug.WriteLine(test);
         }
     }
 }
